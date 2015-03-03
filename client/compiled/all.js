@@ -72,8 +72,8 @@ var app = angular.module("Camaro", ["ui.router"]).run(["$rootScope", "$state", "
 }]);
 "use strict";
 
-angular.module("Camaro").controller("headerCtrl", function () {
-  console.log("headerCtrl loaded");
+angular.module("Camaro").controller("navCtrl", function () {
+  console.log("navCtrl loaded");
 });
 "use strict";
 
@@ -84,7 +84,7 @@ angular.module("Camaro").controller("protectedCtrl", function () {
 
 angular.module("Camaro").config(["$stateProvider", function ($stateProvider, $urlRouterProvider, $locationProvider) {
   $stateProvider.state("root.protected", {
-    url: "/protected",
+    url: "protected",
     views: {
       "container@": {
         templateUrl: "client/app/protected/protected.html",
@@ -114,11 +114,6 @@ angular.module("Camaro").service("Secrets", function ($http) {
 });
 "use strict";
 
-angular.module("Camaro").controller("navCtrl", function () {
-  console.log("navCtrl loaded");
-});
-"use strict";
-
 angular.module("Camaro").service("Auth", function ($http) {
   var AuthClass = function AuthClass() {
     this.isAuthed = function () {
@@ -137,4 +132,18 @@ angular.module("Camaro").service("Auth", function ($http) {
 angular.module("Camaro").controller("vehiclesController", function () {
   console.log("controller loaded");
 });
+"use strict";
+
+angular.module("Camaro").directive("userInfo", function () {
+  return {
+    restrict: "EA",
+    templateUrl: "client/app/directives/user-info/template.html",
+    controller: function controller($scope, $element) {
+      $scope.name = "name";
+    },
+    link: function link(scope, el, attr) {}
+  };
+});
+
+// scope.name = scope.name + "Third ";
 //# sourceMappingURL=all.js.map
