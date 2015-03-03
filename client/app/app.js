@@ -32,8 +32,8 @@ var app = angular.module('Camaro', [
     ]
   )
   .config(
-    ['$stateProvider', '$urlRouterProvider', '$locationProvider',
-      function($stateProvider, $urlRouterProvider, $locationProvider) {
+    ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$provide', '$httpProvider',
+      function($stateProvider, $urlRouterProvider, $locationProvider, $provide, $httpProvider) {
         $locationProvider.html5Mode(true);
         // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
         $urlRouterProvider.otherwise('/');
@@ -51,6 +51,27 @@ var app = angular.module('Camaro', [
               // }
             }
           })
+        $provide.factory('myHttpInterceptor', function($q, $injector) {
+          return {
+            response: function(response) {
+              console.log("Success")
+                // do something on success
+              return response;
+            },
+            responseError: function(response) {
+              // do something on error
+              console.log("Response intercept")
+              if (response.status === 401) {
+                $injector.get('$state').transitionTo('login');
+                return $q.reject(response);
+              }
+              // console.log(response)
+              $injector.get('alertFactory').alerts(response);
+              return $q.reject(response);
+            }
+          };
+        });
+        $httpProvider.interceptors.push('myHttpInterceptor');
       }
     ]
   );

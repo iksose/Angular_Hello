@@ -21,7 +21,7 @@ var app = angular.module("Camaro", ["ui.router"]).run(["$rootScope", "$state", "
   $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
     $(".page-loading").addClass("hidden");
   });
-}]).config(["$stateProvider", "$urlRouterProvider", "$locationProvider", function ($stateProvider, $urlRouterProvider, $locationProvider) {
+}]).config(["$stateProvider", "$urlRouterProvider", "$locationProvider", "$provide", "$httpProvider", function ($stateProvider, $urlRouterProvider, $locationProvider, $provide, $httpProvider) {
   $locationProvider.html5Mode(true);
   // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
   $urlRouterProvider.otherwise("/");
@@ -38,31 +38,42 @@ var app = angular.module("Camaro", ["ui.router"]).run(["$rootScope", "$state", "
       // }
     }
   });
+  $provide.factory("myHttpInterceptor", function ($q, $injector) {
+    return {
+      response: (function (_response) {
+        var _responseWrapper = function response(_x) {
+          return _response.apply(this, arguments);
+        };
+
+        _responseWrapper.toString = function () {
+          return _response.toString();
+        };
+
+        return _responseWrapper;
+      })(function (response) {
+        console.log("Success");
+        // do something on success
+        return response;
+      }),
+      responseError: function responseError(response) {
+        // do something on error
+        console.log("Response intercept");
+        if (response.status === 401) {
+          $injector.get("$state").transitionTo("login");
+          return $q.reject(response);
+        }
+        // console.log(response)
+        $injector.get("alertFactory").alerts(response);
+        return $q.reject(response);
+      }
+    };
+  });
+  $httpProvider.interceptors.push("myHttpInterceptor");
 }]);
 "use strict";
 
 angular.module("Camaro").controller("headerCtrl", function () {
   console.log("headerCtrl loaded");
-});
-"use strict";
-
-angular.module("Camaro").controller("navCtrl", function () {
-  console.log("navCtrl loaded");
-});
-"use strict";
-
-angular.module("Camaro").service("Auth", function ($http) {
-  var AuthClass = function AuthClass() {
-    this.isAuthed = function () {
-      return new Promise(function (resolve, reject) {
-        resolve("yay");
-      });
-    };
-  };
-
-  var Auth = new AuthClass();
-
-  return Auth;
 });
 "use strict";
 
@@ -100,6 +111,26 @@ angular.module("Camaro").service("Secrets", function ($http) {
   var Secrets = new SecretClass();
 
   return Secrets;
+});
+"use strict";
+
+angular.module("Camaro").controller("navCtrl", function () {
+  console.log("navCtrl loaded");
+});
+"use strict";
+
+angular.module("Camaro").service("Auth", function ($http) {
+  var AuthClass = function AuthClass() {
+    this.isAuthed = function () {
+      return new Promise(function (resolve, reject) {
+        resolve("yay");
+      });
+    };
+  };
+
+  var Auth = new AuthClass();
+
+  return Auth;
 });
 "use strict";
 
