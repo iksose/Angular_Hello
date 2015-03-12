@@ -12,11 +12,11 @@ var routes = globSync('./routes/**/*.js', {
 });
 
 // GET /static/style.css etc.
-app.use('/client', express.static('./client'));
+app.use('/client', express.static('../client'));
 
 app.get('*', function(req, res) {
   res.sendFile('index.html', {
-    root: './client/'
+    root: '../client/'
   });
 });
 

@@ -72,11 +72,6 @@ var app = angular.module("Camaro", ["ui.router"]).run(["$rootScope", "$state", "
 }]);
 "use strict";
 
-angular.module("Camaro").controller("navCtrl", function () {
-  console.log("navCtrl loaded");
-});
-"use strict";
-
 angular.module("Camaro").controller("protectedCtrl", function () {
   console.log("protectedCtrl loaded");
 });
@@ -111,6 +106,11 @@ angular.module("Camaro").service("Secrets", function ($http) {
   var Secrets = new SecretClass();
 
   return Secrets;
+});
+"use strict";
+
+angular.module("Camaro").controller("navCtrl", function () {
+  console.log("navCtrl loaded");
 });
 "use strict";
 
