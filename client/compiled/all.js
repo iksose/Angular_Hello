@@ -114,6 +114,11 @@ angular.module("Camaro").controller("navCtrl", function () {
 });
 "use strict";
 
+angular.module("Camaro").controller("vehiclesController", function () {
+  console.log("controller loaded");
+});
+"use strict";
+
 angular.module("Camaro").service("Auth", function ($http) {
   var AuthClass = function AuthClass() {
     this.isAuthed = function () {
@@ -126,11 +131,6 @@ angular.module("Camaro").service("Auth", function ($http) {
   var Auth = new AuthClass();
 
   return Auth;
-});
-"use strict";
-
-angular.module("Camaro").controller("vehiclesController", function () {
-  console.log("controller loaded");
 });
 "use strict";
 

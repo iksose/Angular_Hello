@@ -1,19 +1,15 @@
 module.exports = function(app) {
   var express = require('express');
   var secretsRouter = express.Router();
+  var mongoose = require('mongoose');
+  var userSchema = require('../models/secrets')
 
   secretsRouter.get('/', function(req, res) {
-    setTimeout(function() {
-      res.send({
-        'secrets': [{
-          id: 1,
-          title: "i'm a ghost"
-        }, {
-          id: 2,
-          title: "i'm a spooky ghost"
-        }]
-      });
-    }, 1000)
+    var User = mongoose.model('secrets', userSchema);
+    User.find({}, function(err, users) {
+      if (err) throw err;
+      res.send(users)
+    });
   });
 
   secretsRouter.post('/', function(req, res) {
