@@ -1,22 +1,11 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-module.exports = new Schema({
+
+// Define our schema
+var SecretSchema = new mongoose.Schema({
   name: String,
-  username: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  admin: Boolean,
-  location: String,
-  meta: {
-    age: Number,
-    website: String
-  },
-  created_at: Date,
-  updated_at: Date
+  type: String,
+  quantity: Number
 });
+
+// Export the Mongoose model
+module.exports = mongoose.model('secrets', SecretSchema);

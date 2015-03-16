@@ -30,38 +30,36 @@ gulp.task('watch', function() {
 var spawn = require('child_process').spawn;
 var gutil = require('gulp-util');
 var nodemon = require('gulp-nodemon');
+var del = require('del');
 
-gulp.task('server', function() {
+gulp.task('es6', function() {
 
   gulp.watch('server/**/**.js', function(e) {
-    // Do run some gulp tasks here
-    // ...
+    // clean
+    del(['./lib'], function() {
+      // Finally execute your script below - here "ls -lA"
+      var child = spawn("babel", ["./server", "--out-dir", "./lib"]),
+        stdout = '',
+        stderr = '';
 
-    // Finally execute your script below - here "ls -lA"
-    var child = spawn("babel", ["./server", "--out-dir", "./lib"]),
-      stdout = '',
-      stderr = '';
+      child.stdout.setEncoding('utf8');
 
-    child.stdout.setEncoding('utf8');
+      child.stdout.on('data', function(data) {
+        stdout += data;
+        gutil.log(data);
+      });
 
-    child.stdout.on('data', function(data) {
-      stdout += data;
-      gutil.log(data);
-    });
+      child.stderr.setEncoding('utf8');
+      child.stderr.on('data', function(data) {
+        stderr += data;
+        gutil.log(gutil.colors.red(data));
+        // gutil.beep();
+      });
 
-    child.stderr.setEncoding('utf8');
-    child.stderr.on('data', function(data) {
-      stderr += data;
-      gutil.log(gutil.colors.red(data));
-      // gutil.beep();
-    });
-
-    child.on('close', function(code) {
-      gutil.log("Done with exit code", code);
-      gutil.log("You access complete stdout and stderr from here"); // stdout, stderr
-    });
-
-
+      child.on('close', function(code) {
+        gutil.log("Done with exit code", code);
+      });
+    })
   });
 });
 
@@ -75,7 +73,7 @@ gulp.task('develop', function() {
       ext: 'js',
       ignore: ['./client', './lib']
     })
-    .on('change', ['babel'])
+    .on('change', ['es6'])
     .on('restart', function() {
       console.log('restarted!')
     })

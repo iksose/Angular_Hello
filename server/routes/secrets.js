@@ -2,13 +2,14 @@ module.exports = function(app) {
   var express = require('express');
   var secretsRouter = express.Router();
   var mongoose = require('mongoose');
-  var userSchema = require('../models/secrets')
+  var Secret = require('../models/secrets')
 
   secretsRouter.get('/', function(req, res) {
-    var User = mongoose.model('secrets', userSchema);
-    User.find({}, function(err, users) {
+    // var User = mongoose.model('secrets', userSchema);
+    // var secret = new Secret();
+    Secret.find({}, function(err, secrets) {
       if (err) throw err;
-      res.send(users)
+      res.send(secrets)
     });
   });
 
